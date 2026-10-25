@@ -18,23 +18,18 @@
 
 ## 📌 Overview
 
-Linux disk-encryption (LUKS / crypttab / TPM2 / FIDO2) configuration auditor
+OLuksX is an offline, read-only Linux disk-encryption configuration auditor for LUKS1/LUKS2 headers, crypttab/fstab, TPM2/FIDO2/Clevis tokens, and related dmsetup/clevis outputs. It never decrypts or writes to devices; it scores PBKDF, cipher, keyslot, and unlock-token posture and exports TXT, Markdown, JSON, CSV, or SARIF.
 
 ---
 
 ## ✨ Features
 
-- Read-only raw LUKS1 / LUKS2 binary header parser (struct; primary + secondary header, SHA-256 csum, LUKS2 JSON metadata area) for devices and images
-- `cryptsetup luksDump` text parser (LUKS1 & LUKS2) and `--dump-json-metadata` JSON parser
-- PBKDF audit — LUKS1, pbkdf2, iterations, Argon2 memory / time / threads, argon2i vs argon2id
-- Cipher audit — cbc-plain, cbc-essiv, ECB, XTS key size, cipher_null, legacy ciphers, sector size
-- Keyslot hygiene — count, stale / unbound slots, AF stripes, keyslot encryption, recovery options
-- Tokens — systemd-tpm2 (PIN, PCRs, bank), FIDO2 (up / uv / clientPin), Clevis (tang http, tpm2, sss)
-- /etc/crypttab, /etc/fstab, swap & /tmp, keyfiles, header backups, dm-integrity, detached headers
-- `clevis luks list` and `dmsetup table` parsers (volume keys are never displayed or stored)
-- Weighted score + A+…F grade, hardened templates
-- Export TXT / Markdown / JSON / CSV / SARIF 2.1.0
-- Self-test --demo, CI gates --fail-on / --min-severity
+- Raw LUKS1/LUKS2 binary header parser and `cryptsetup luksDump` / JSON metadata parsers
+- PBKDF audit (LUKS1, pbkdf2, Argon2 memory/time/threads, argon2i vs argon2id)
+- Cipher audit (cbc-plain/essiv, ECB, XTS key size, cipher_null, legacy ciphers, sector size)
+- Keyslot hygiene and token review: systemd-tpm2, FIDO2, Clevis (tang/tpm2/sss)
+- crypttab/fstab, swap & /tmp, keyfiles, header backups, dm-integrity, detached headers
+- Weighted score/grade, templates, multi-format export, `--demo` and CI severity gates
 
 ---
 
@@ -48,7 +43,10 @@ Linux disk-encryption (LUKS / crypttab / TPM2 / FIDO2) configuration auditor
 ## 🚀 Usage
 
 ```bash
-./OLuksX
+./OLuksX --scan
+./OLuksX --dump luksDump.txt --crypttab /etc/crypttab -f json -o luks.json
+./OLuksX --demo --fail-on high
+./OLuksX --help
 ```
 
 ---
